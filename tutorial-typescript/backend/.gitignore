@@ -1,0 +1,5 @@
+.env
+.vscode
+static
+__pycache__
+migrations
