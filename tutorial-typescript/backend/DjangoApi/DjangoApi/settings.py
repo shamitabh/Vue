@@ -36,7 +36,7 @@ EXTERNAL_APPS = [
     "djoser",
 ]
 
-CUSTOM_APPS = ["product"]
+CUSTOM_APPS = ["product.apps.ProductConfig"]
 
 INSTALLED_APPS = INTERNAL_APPS + EXTERNAL_APPS + CUSTOM_APPS
 
