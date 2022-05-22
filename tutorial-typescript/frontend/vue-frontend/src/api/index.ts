@@ -16,8 +16,11 @@ apiInstance.interceptors.response.use(
   }
 );
 
+////////////////////////////////////
+// APIs
+/////////////////////////////////////
 export const getLatestProductsApi = async () => {
-  const response: AxiosResponse = await apiInstance.get("/api/products/latest");
+  const response = await apiInstance.get("/api/products/latest");
   return response.data;
 };
 
@@ -25,7 +28,7 @@ export const getProductApi = async (
   categorySlug: string | string[],
   productSlug: string | string[]
 ) => {
-  const response: AxiosResponse = await apiInstance.get(
+  const response = await apiInstance.get(
     `api/products/${categorySlug}/${productSlug}`
   );
   return response.data;

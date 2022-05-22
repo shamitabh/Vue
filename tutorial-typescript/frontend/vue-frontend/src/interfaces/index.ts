@@ -7,3 +7,19 @@ export interface productType {
   image?: string;
   thumbnail?: string;
 }
+
+export interface cartItemType {
+  product: productType;
+  quantity: number;
+}
+
+export interface cartType {
+  items: cartItemType[];
+}
+
+export interface stateType {
+  cart: cartType;
+  isAuthenticated: boolean;
+  token: string;
+  isLoading: boolean;
+}

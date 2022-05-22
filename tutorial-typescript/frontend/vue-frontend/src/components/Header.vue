@@ -31,9 +31,9 @@
             >
             <router-link to="/cart" class="button is-success">
               <span class="icon">
-                <i class="fas fa-shopping-cart"></i>
+                <i class="fa-solid fa-cart-shopping"></i>
               </span>
-              <span>Cart</span>
+              <span>Cart ({{ cartTotalLength }})</span>
             </router-link>
           </div>
         </div>
@@ -43,10 +43,20 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { Vue } from "vue-class-component";
+import { cartType } from "@/interfaces";
 
-@Options({})
 export default class Header extends Vue {
   showMobileMenu: boolean = false;
+  cart: cartType = {
+    items: [],
+  };
+
+  get cartTotalLength() {
+    return this.cart.items.reduce(
+      (sum, item) => (sum = sum + item.quantity),
+      0
+    );
+  }
 }
 </script>

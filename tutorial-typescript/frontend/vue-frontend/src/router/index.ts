@@ -8,6 +8,22 @@ const routes: Array<RouteRecordRaw> = [
     component: HomeView,
   },
   {
+    path: "/winter",
+    redirect: { name: "home" },
+  },
+  {
+    path: "/summer",
+    redirect: { name: "home" },
+  },
+  {
+    path: "/cart",
+    redirect: { name: "home" },
+  },
+  {
+    path: "/login",
+    redirect: { name: "home" },
+  },
+  {
     path: "/:categorySlug/:productSlug",
     name: "product",
     component: () => import("@/views/ProductView.vue"),

@@ -17,6 +17,7 @@
 import { Vue, Options } from "vue-class-component";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
+import store from "@/store";
 
 @Options({
   components: {
@@ -24,7 +25,11 @@ import Footer from "@/components/Footer.vue";
     Footer,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  beforeCreate() {
+    store.commit("initializeStore");
+  }
+}
 </script>
 
 <style lang="scss">
