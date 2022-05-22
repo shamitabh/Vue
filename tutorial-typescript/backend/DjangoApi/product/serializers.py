@@ -18,4 +18,4 @@ class ProductSerializer(serializers.ModelSerializer):
         )
 
     def get_absolute_url(self, instance):
-        return f"/{instance.category.slug}/{instance.slug}/"
+        return f"/{instance.category.slug}/{instance.slug}"
