@@ -16,10 +16,3 @@ export interface cartItemType {
 export interface cartType {
   items: cartItemType[];
 }
-
-export interface stateType {
-  cart: cartType;
-  isAuthenticated: boolean;
-  token: string;
-  isLoading: boolean;
-}

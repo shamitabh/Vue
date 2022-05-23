@@ -27,7 +27,7 @@ import store from "@/store";
 })
 export default class App extends Vue {
   beforeCreate() {
-    store.commit("initializeStore");
+    store.commit("cart/initializeStore");
   }
 }
 </script>

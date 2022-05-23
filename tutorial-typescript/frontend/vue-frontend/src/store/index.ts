@@ -1,36 +1,14 @@
-import { cartItemType, stateType } from "@/interfaces";
 import { createStore } from "vuex";
+import auth, { authModuleType } from "./modules/auth";
+import cart, { cartModuleType } from "./modules/cart";
+import loading, { loadingModuleType } from "./modules/loading";
 
-export default createStore<stateType>({
-  state: {
-    cart: {
-      items: [],
-    },
-    isAuthenticated: false,
-    token: "",
-    isLoading: false,
-  },
-  mutations: {
-    initializeStore(state) {
-      if (localStorage.getItem("cart")) {
-        state.cart = JSON.parse(localStorage.getItem("cart")!);
-      } else {
-        localStorage.setItem("cart", JSON.stringify(state.cart));
-      }
-    },
-    addToCart(state, item: cartItemType) {
-      const exists = state.cart.items.find(
-        (cartItem) => cartItem.product.id === item.product.id
-      );
+export interface storeType {
+  loading: loadingModuleType;
+  cart: cartModuleType;
+  auth: authModuleType;
+}
 
-      if (exists) {
-        exists.quantity = exists.quantity + item.quantity;
-      } else {
-        state.cart.items.push(item);
-      }
-
-      localStorage.setItem("cart", JSON.stringify(state.cart));
-    },
-  },
-  actions: {},
+export default createStore<storeType>({
+  modules: { loading, cart, auth },
 });
