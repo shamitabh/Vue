@@ -1,5 +1,10 @@
 from django.urls import path
-from .views import CategoryDetail, LatestProductList, ProductDetail
+from .views import (
+    CategoryDetail,
+    LatestProductList,
+    ProductDetail,
+    ProductSearch,
+)
 
 app_name = "product"
 
@@ -15,4 +20,5 @@ urlpatterns = [
         CategoryDetail.as_view(),
         name="category-detail",
     ),
+    path("", ProductSearch.as_view(), name="search"),
 ]

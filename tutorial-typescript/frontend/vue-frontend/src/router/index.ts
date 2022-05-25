@@ -8,12 +8,14 @@ const routes: Array<RouteRecordRaw> = [
     component: HomeView,
   },
   {
-    path: "/winter",
-    redirect: { name: "home" },
+    path: "/:category_slug",
+    name: "category",
+    component: () => import("@/views/CategoryView.vue"),
   },
   {
-    path: "/summer",
-    redirect: { name: "home" },
+    path: "/search",
+    name: "search",
+    component: () => import("@/views/SearchView.vue"),
   },
   {
     path: "/cart",

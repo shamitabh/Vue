@@ -75,7 +75,7 @@ export default class ProductView extends Vue {
     store.commit("cart/addToCart", this.cartItem);
 
     toast({
-      message: "Product added to cart",
+      message: "Product added to cart.",
       type: "is-success",
     });
   }

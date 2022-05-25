@@ -1,5 +1,7 @@
 import store from "@/store";
 import axios from "axios";
+import { toast } from "bulma-toast";
+import { LocationQueryValue } from "vue-router";
 
 // axios instance
 const apiInstance = axios.create({
@@ -26,6 +28,10 @@ apiInstance.interceptors.response.use(
   },
   (error) => {
     store.commit("loading/setLoading", false);
+    toast({
+      message: "Something went wrong. Please try again.",
+      type: "is-danger",
+    });
     throw error;
   }
 );
@@ -45,5 +51,17 @@ export const getProductApi = async (
   const response = await apiInstance.get(
     `api/products/${categorySlug}/${productSlug}`
   );
+  return response.data;
+};
+
+export const getCategoryApi = async (categorySlug: string | string[]) => {
+  const response = await apiInstance.get(`api/products/${categorySlug}`);
+  return response.data;
+};
+
+export const searchProductsApi = async (
+  query: LocationQueryValue | LocationQueryValue[]
+) => {
+  const response = await apiInstance.post(`api/products/`, { query: query });
   return response.data;
 };

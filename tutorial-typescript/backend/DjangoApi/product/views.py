@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from DjangoApi.utilities import get_exception_status_code
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 
 class LatestProductList(APIView):
@@ -43,6 +44,21 @@ class CategoryDetail(APIView):
                 slug=kwargs["category_slug"],
             )
             serializer = CategorySerializer(instance=product)
+            response = serializer.data
+            status_code = status.HTTP_200_OK
+        except Exception as e:
+            response, status_code = get_exception_status_code(e)
+        return Response(response, status=status_code)
+
+
+class ProductSearch(APIView):
+    def post(self, *args, **kwargs):
+        try:
+            query = self.request.data.get("query", "")
+            products = Product.objects.filter(
+                Q(name__icontains=query) | Q(description__icontains=query)
+            )
+            serializer = ProductSerializer(instance=products, many=True)
             response = serializer.data
             status_code = status.HTTP_200_OK
         except Exception as e:

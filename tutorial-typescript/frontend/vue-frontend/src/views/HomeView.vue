@@ -11,26 +11,21 @@
       <div class="column is-12">
         <h2 class="is-size-2 has-text-centered">Latest products</h2>
       </div>
-      <div
-        class="column is-3"
-        v-for="product in latestProducts"
-        :key="product.id"
-      >
-        <Product :product="product" />
-      </div>
+
+      <ProductBox :products="latestProducts" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Product from "@/components/Product.vue";
 import { productType } from "@/interfaces";
 import { getLatestProductsApi } from "@/api";
+import ProductBox from "@/components/ProductBox.vue";
 
 @Options({
   components: {
-    Product,
+    ProductBox,
   },
 })
 export default class HomeView extends Vue {
