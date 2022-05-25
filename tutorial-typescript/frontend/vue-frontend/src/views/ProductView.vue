@@ -16,7 +16,7 @@
             <input type="number" class="input" min="1" v-model="quantity" />
           </div>
           <div class="control">
-            <a href="" class="button is-dark">Add to cart</a>
+            <a class="button is-dark" @click="addToCart">Add to cart</a>
           </div>
         </div>
       </div>
@@ -28,6 +28,8 @@
 import { Vue } from "vue-class-component";
 import { productType } from "@/interfaces";
 import { getProductApi } from "@/api";
+import store from "@/store";
+import { toast } from "bulma-toast";
 
 export default class ProductView extends Vue {
   product: productType = {};
@@ -49,9 +51,29 @@ export default class ProductView extends Vue {
     return process.env.VUE_APP_BASE_API + this.product.image;
   }
 
+  get cartItem() {
+    return {
+      product: this.product,
+      quantity: this.quantity,
+    };
+  }
+
   getProduct() {
     getProductApi(this.categorySlug, this.productSlug).then((data) => {
       this.product = data;
+    });
+  }
+
+  addToCart() {
+    if (this.quantity < 1) {
+      this.quantity = 1;
+    }
+
+    store.commit("cart/addToCart", this.cartItem);
+
+    toast({
+      message: "Product added to cart",
+      type: "is-success",
     });
   }
 }
