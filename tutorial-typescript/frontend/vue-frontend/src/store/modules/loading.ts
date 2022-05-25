@@ -7,4 +7,9 @@ export default {
   state: (): loadingModuleType => ({
     isLoading: false,
   }),
+  mutations: {
+    setLoading(state: loadingModuleType, status: boolean) {
+      state.isLoading = status;
+    },
+  },
 };

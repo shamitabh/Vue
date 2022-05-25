@@ -61,6 +61,9 @@ export default class ProductView extends Vue {
   getProduct() {
     getProductApi(this.categorySlug, this.productSlug).then((data) => {
       this.product = data;
+
+      // set page title
+      document.title = `${this.product.name} | Djackets`;
     });
   }
 
