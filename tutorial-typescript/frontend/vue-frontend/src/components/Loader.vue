@@ -1,7 +1,7 @@
 <template>
   <div
     class="is-loading-bar has-text-centered"
-    :class="{ 'is-loading': store.state.loading.isLoading }"
+    :class="{ 'is-loading': isLoading }"
   >
     <div class="lds-dual-ring"></div>
   </div>
@@ -9,10 +9,12 @@
 
 <script lang="ts">
 import { Vue } from "vue-class-component";
-import store from "@/store";
+import { namespace } from "vuex-class";
+
+const loading = namespace("loading");
 
 export default class Loader extends Vue {
-  store = store;
+  @loading.State isLoading!: boolean;
 }
 </script>
 

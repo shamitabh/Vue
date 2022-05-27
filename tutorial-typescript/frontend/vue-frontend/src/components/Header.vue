@@ -67,20 +67,12 @@
 
 <script lang="ts">
 import { Vue } from "vue-class-component";
-import store from "@/store";
+import { namespace } from "vuex-class";
+
+const cart = namespace("cart");
 
 export default class Header extends Vue {
   showMobileMenu: boolean = false;
-
-  get cart() {
-    return store.state.cart.cart;
-  }
-
-  get cartTotalLength() {
-    return this.cart.items.reduce(
-      (sum, item) => (sum = sum + item.quantity),
-      0
-    );
-  }
+  @cart.Getter cartTotalLength!: number;
 }
 </script>

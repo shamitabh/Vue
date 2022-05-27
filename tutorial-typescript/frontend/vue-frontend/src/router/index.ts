@@ -19,7 +19,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/cart",
-    redirect: { name: "home" },
+    name: "cart",
+    component: () => import("@/views/CartView.vue"),
   },
   {
     path: "/login",

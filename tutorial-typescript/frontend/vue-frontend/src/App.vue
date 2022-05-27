@@ -20,8 +20,10 @@
 import { Vue, Options } from "vue-class-component";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
-import store from "@/store";
-import Loader from "./components/Loader.vue";
+import Loader from "@/components/Loader.vue";
+import { namespace } from "vuex-class";
+
+const cart = namespace("cart");
 
 @Options({
   components: {
@@ -31,8 +33,10 @@ import Loader from "./components/Loader.vue";
   },
 })
 export default class App extends Vue {
-  beforeCreate() {
-    store.commit("cart/initializeStore");
+  @cart.Mutation initializeStore!: () => void;
+
+  created() {
+    this.initializeStore();
   }
 }
 </script>

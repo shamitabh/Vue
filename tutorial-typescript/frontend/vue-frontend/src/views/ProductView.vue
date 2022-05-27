@@ -16,7 +16,7 @@
             <input type="number" class="input" min="1" v-model="quantity" />
           </div>
           <div class="control">
-            <a class="button is-dark" @click="addToCart">Add to cart</a>
+            <a class="button is-dark" @click="updateCart">Add to cart</a>
           </div>
         </div>
       </div>
@@ -26,14 +26,16 @@
 
 <script lang="ts">
 import { Vue } from "vue-class-component";
-import { productType } from "@/interfaces";
+import { cartItemType, productType } from "@/interfaces";
 import { getProductApi } from "@/api";
-import store from "@/store";
-import { toast } from "bulma-toast";
+import { namespace } from "vuex-class";
+
+const cart = namespace("cart");
 
 export default class ProductView extends Vue {
   product: productType = {};
   quantity: number = 1;
+  @cart.Mutation addToCart!: (item: cartItemType) => void;
 
   created() {
     this.getProduct();
@@ -67,17 +69,12 @@ export default class ProductView extends Vue {
     });
   }
 
-  addToCart() {
+  updateCart() {
     if (this.quantity < 1) {
       this.quantity = 1;
     }
 
-    store.commit("cart/addToCart", this.cartItem);
-
-    toast({
-      message: "Product added to cart.",
-      type: "is-success",
-    });
+    this.addToCart(this.cartItem);
   }
 }
 </script>

@@ -3,6 +3,8 @@ import axios from "axios";
 import { toast } from "bulma-toast";
 import { LocationQueryValue } from "vue-router";
 
+// @loading.Mutation('setLoading') const setLoading: (boolean) => void;
+
 // axios instance
 const apiInstance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
