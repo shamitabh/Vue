@@ -9,12 +9,11 @@ internal_urls = [
 
 external_urls = [
     path("api/rest-auth/", include("rest_framework.urls")),
-    path("api/auth/", include("djoser.urls")),
-    path("api/auth/", include("djoser.urls.authtoken")),
 ]
 
 custom_urls = [
-    path("api/products/", include("product.urls", namespace="product"))
+    path("api/products/", include("product.urls", namespace="product")),
+    path("api/account/", include("account.urls", namespace="account")),
 ]
 
 urlpatterns = (

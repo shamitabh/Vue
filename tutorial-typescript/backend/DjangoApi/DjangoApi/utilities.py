@@ -8,7 +8,7 @@ from PIL import Image
 
 def get_exception_status_code(exception):
     print(traceback.format_exc())
-    response = {"message": exception.args[0]}
+    response = {"detail": exception.args[0]}
     if type(exception) is serializers.ValidationError:
         status_code = status.HTTP_400_BAD_REQUEST
     elif type(exception) is Http404:

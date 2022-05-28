@@ -62,7 +62,7 @@ export const getProductApi = async (
   return response.data;
 };
 
-export const getCategoryApi = async (categorySlug: string | string[]) => {
+export const getCategoryApi = async (categorySlug: string | undefined) => {
   const response = await apiInstance.get(`api/products/${categorySlug}`);
   return response.data;
 };

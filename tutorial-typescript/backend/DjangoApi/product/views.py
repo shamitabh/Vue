@@ -1,4 +1,5 @@
 from .serializers import CategorySerializer, ProductSerializer
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Category, Product
 from rest_framework.views import APIView
@@ -9,6 +10,8 @@ from django.db.models import Q
 
 
 class LatestProductList(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, *args, **kwargs):
         try:
             products = Product.objects.all()[:4]

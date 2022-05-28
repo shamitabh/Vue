@@ -50,12 +50,12 @@
         <div class="navbar-item">
           <div class="buttons">
             <router-link
-              to="/log-in"
+              to="/login"
               class="button is-light"
               v-if="isAuthenticated"
               >Logout</router-link
             >
-            <router-link to="/log-in" class="button is-light" v-else
+            <router-link to="/login" class="button is-light" v-else
               >Login</router-link
             >
             <router-link to="/cart" class="button is-success">

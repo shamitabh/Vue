@@ -31,30 +31,21 @@ interface CategoryType {
     ProductBox,
   },
   watch: {
-    $route(val: RouteLocation) {
-      // this will limit the watcher only to 'category' route changes
-      if (val.name === "category") {
-        getCategoryApi(this.categorySlug).then((data) => {
+    categorySlug: {
+      handler(newVal: string, _oldVal: string) {
+        getCategoryApi(newVal).then((data) => {
           this.category = data;
 
           // set page title
           document.title = `${this.category.name} | Djackets`;
         });
-      }
+      },
+      immediate: true,
     },
   },
 })
 export default class CategoryView extends Vue {
   category: CategoryType = {};
-
-  created() {
-    getCategoryApi(this.categorySlug).then((data) => {
-      this.category = data;
-
-      // set page title
-      document.title = `${this.category.name} | Djackets`;
-    });
-  }
 
   get categorySlug() {
     return this.$route.params.category_slug;

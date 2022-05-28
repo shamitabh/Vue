@@ -10,7 +10,7 @@
       </div>
       <div class="column is-3">
         <h2 class="subtitle">Information</h2>
-        <p><strong>Price: </strong>${{ product.price }}</p>
+        <p><strong>Price: </strong>${{ product.price?.toFixed(2) }}</p>
         <div class="field has-addons mt-6">
           <div class="control">
             <input type="number" class="input" min="1" v-model="quantity" />

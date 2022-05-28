@@ -41,7 +41,7 @@ const auth: Module<authModuleType, storeType> = {
       context: ActionContext<authModuleType, storeType>,
       form: authType
     ) {
-      const response = await apiInstance.post("/api/auth/token/login/", form);
+      const response = await apiInstance.post("/api/token/", form);
       context.commit("setAuth", response.data.auth_token);
     },
   },

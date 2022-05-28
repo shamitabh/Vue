@@ -23,14 +23,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/CartView.vue"),
   },
   {
-    path: "/log-in",
-    name: "logIn",
-    component: () => import("@/views/LogInView.vue"),
+    path: "/login",
+    name: "login",
+    component: () => import("@/views/SigninView.vue"),
   },
   {
-    path: "/sign-up",
-    name: "signUp",
-    component: () => import("@/views/SignUpView.vue"),
+    path: "/signup",
+    name: "signup",
+    component: () => import("@/views/RegisterView.vue"),
   },
   {
     path: "/:categorySlug/:productSlug",

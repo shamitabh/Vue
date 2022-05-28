@@ -4,7 +4,7 @@
       <img :src="absoluteThumbnailUrl" :alt="product.name" />
     </figure>
     <h3 class="is-size-4">{{ product.name }}</h3>
-    <p class="is-size-6 has-text-grey">INR {{ product.price }}</p>
+    <p class="is-size-6 has-text-grey">INR {{ product.price?.toFixed(2) }}</p>
     <router-link :to="product.absolute_url" class="button is-dark mt-4"
       >View details</router-link
     >
