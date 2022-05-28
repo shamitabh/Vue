@@ -23,6 +23,7 @@ import Footer from "@/components/Footer.vue";
 import Loader from "@/components/Loader.vue";
 import { namespace } from "vuex-class";
 
+const auth = namespace("auth");
 const cart = namespace("cart");
 
 @Options({
@@ -33,10 +34,12 @@ const cart = namespace("cart");
   },
 })
 export default class App extends Vue {
-  @cart.Mutation initializeStore!: () => void;
+  @auth.Mutation initializeAuth!: () => void;
+  @cart.Mutation initializeCart!: () => void;
 
   created() {
-    this.initializeStore();
+    this.initializeAuth();
+    this.initializeCart();
   }
 }
 </script>

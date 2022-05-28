@@ -1,11 +1,13 @@
 import { cartItemType, cartType } from "@/interfaces";
 import { toast } from "bulma-toast";
+import { Module } from "vuex";
+import { storeType } from "..";
 
 export interface cartModuleType {
   cart: cartType;
 }
 
-export default {
+const cart: Module<cartModuleType, storeType> = {
   namespaced: true,
   state: (): cartModuleType => ({
     cart: {
@@ -13,7 +15,7 @@ export default {
     },
   }),
   mutations: {
-    initializeStore(state: cartModuleType) {
+    initializeCart(state: cartModuleType) {
       if (localStorage.getItem("cart")) {
         state.cart = JSON.parse(localStorage.getItem("cart")!);
       } else {
@@ -65,3 +67,5 @@ export default {
     },
   },
 };
+
+export default cart;

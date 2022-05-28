@@ -16,3 +16,8 @@ export interface cartItemType {
 export interface cartType {
   items: cartItemType[];
 }
+
+export interface authType {
+  username: string;
+  password: string;
+}

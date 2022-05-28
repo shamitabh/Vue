@@ -31,7 +31,7 @@ import ProductBox from "@/components/ProductBox.vue";
 export default class HomeView extends Vue {
   latestProducts: productType[] = [];
 
-  mounted() {
+  created() {
     this.getLatestProducts();
 
     // set page title

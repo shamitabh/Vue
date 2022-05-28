@@ -49,8 +49,14 @@
         <router-link to="/winter" class="navbar-item">Winter</router-link>
         <div class="navbar-item">
           <div class="buttons">
-            <router-link to="/login" class="button is-light"
-              >Log in</router-link
+            <router-link
+              to="/log-in"
+              class="button is-light"
+              v-if="isAuthenticated"
+              >Logout</router-link
+            >
+            <router-link to="/log-in" class="button is-light" v-else
+              >Login</router-link
             >
             <router-link to="/cart" class="button is-success">
               <span class="icon">
@@ -70,9 +76,11 @@ import { Vue } from "vue-class-component";
 import { namespace } from "vuex-class";
 
 const cart = namespace("cart");
+const auth = namespace("auth");
 
 export default class Header extends Vue {
   showMobileMenu: boolean = false;
   @cart.Getter cartTotalLength!: number;
+  @auth.State isAuthenticated!: boolean;
 }
 </script>

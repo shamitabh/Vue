@@ -1,8 +1,11 @@
+import { Module } from "vuex";
+import { storeType } from "..";
+
 export interface loadingModuleType {
   isLoading: boolean;
 }
 
-export default {
+const loading: Module<loadingModuleType, storeType> = {
   namespaced: true,
   state: (): loadingModuleType => ({
     isLoading: false,
@@ -13,3 +16,5 @@ export default {
     },
   },
 };
+
+export default loading;

@@ -60,6 +60,11 @@ export default class CartView extends Vue {
   @cart.State cart!: cartType;
   @cart.Mutation removeFromCart!: (item: cartItemType) => void;
 
+  created() {
+    // set page title
+    document.title = "Cart | Djackets";
+  }
+
   get cartTotalPrice() {
     return this.cart.items.reduce(
       (sum, item) => (sum += item.quantity * item.product.price!),

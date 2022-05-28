@@ -1,9 +1,7 @@
 import store from "@/store";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "bulma-toast";
 import { LocationQueryValue } from "vue-router";
-
-// @loading.Mutation('setLoading') const setLoading: (boolean) => void;
 
 // axios instance
 const apiInstance = axios.create({
@@ -14,11 +12,18 @@ const apiInstance = axios.create({
 apiInstance.interceptors.request.use(
   (request) => {
     store.commit("loading/setLoading", true);
+
+    const token = store.state.auth.token;
+    if (token) {
+      request.headers = {
+        Authorization: `Token ${token}`,
+      };
+    }
     return request;
   },
-  (error) => {
+  (error: AxiosError) => {
     store.commit("loading/setLoading", false);
-    throw error;
+    return Promise.reject(error);
   }
 );
 
@@ -28,13 +33,14 @@ apiInstance.interceptors.response.use(
     store.commit("loading/setLoading", false);
     return response;
   },
-  (error) => {
+  (error: AxiosError) => {
     store.commit("loading/setLoading", false);
-    toast({
-      message: "Something went wrong. Please try again.",
-      type: "is-danger",
-    });
-    throw error;
+    if (error.response?.status === 500)
+      toast({
+        message: "Something went wrong. Please try again.",
+        type: "is-danger",
+      });
+    return Promise.reject(error);
   }
 );
 
@@ -67,3 +73,9 @@ export const searchProductsApi = async (
   const response = await apiInstance.post(`api/products/`, { query: query });
   return response.data;
 };
+
+export const signUp = async (form: { username: string; password: string }) => {
+  await apiInstance.post("/api/auth/users/", form);
+};
+
+export default apiInstance;
