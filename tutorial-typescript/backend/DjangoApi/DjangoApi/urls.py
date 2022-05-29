@@ -14,6 +14,7 @@ external_urls = [
 custom_urls = [
     path("api/products/", include("product.urls", namespace="product")),
     path("api/account/", include("account.urls", namespace="account")),
+    path("api/order/", include("order.urls", namespace="order")),
 ]
 
 urlpatterns = (

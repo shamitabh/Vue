@@ -40,7 +40,7 @@
                 <input
                   type="text"
                   class="input"
-                  v-model="first_name"
+                  v-model="firstName"
                   placeholder="First name*"
                 />
               </div>
@@ -51,7 +51,7 @@
                 <input
                   type="text"
                   class="input"
-                  v-model="last_name"
+                  v-model="lastName"
                   placeholder="Last name*"
                 />
               </div>
@@ -138,7 +138,8 @@
 
 <script lang="ts">
 import CheckoutItem from "@/components/CheckoutItem.vue";
-import { cartType } from "@/interfaces";
+import { cartType, orderItemType, orderType } from "@/interfaces";
+import { AxiosError } from "axios";
 import { Options, Vue } from "vue-class-component";
 import { namespace } from "vuex-class";
 
@@ -151,12 +152,13 @@ const cart = namespace("cart");
 })
 export default class CheckoutView extends Vue {
   @cart.State cart!: cartType;
+  @cart.Action checkout!: (form: orderType) => Promise<void>;
   @cart.Getter cartTotalLength!: number;
   @cart.Getter cartTotalPrice!: number;
   stripe: any = {};
   card: any = {};
-  first_name: string = "";
-  last_name: string = "";
+  firstName: string = "";
+  lastName: string = "";
   email: string = "";
   phone: string = "";
   address: string = "";
@@ -165,21 +167,100 @@ export default class CheckoutView extends Vue {
   errors: string[] = [];
 
   created() {
+    // add title
     document.title = "Checkout | Djackets";
+  }
+
+  mounted() {
+    // stripe
+    this.setStripeCard();
+
+    // mount the custom UI of stripe only after the entire DOM is mounted
+    (this.card as stripe.elements.Element).mount("#card-element");
   }
 
   onSubmit() {
     this.validateForm();
+
+    if (!this.errors.length) {
+      this.createStripe();
+    }
+  }
+
+  setStripeCard() {
+    if (this.cartTotalLength > 0) {
+      this.stripe = Stripe(process.env.VUE_APP_STRIPE_PUBLISH_KEY);
+      const element = (this.stripe as stripe.Stripe).elements();
+      this.card = element.create("card", { hidePostalCode: true });
+    }
+  }
+
+  createStripe() {
+    (this.stripe as stripe.Stripe)
+      .createToken(this.card)
+      .then((result: any) => {
+        if (result.error) {
+          this.errors.push(
+            "Something went wrong with Stripe. Please try again."
+          );
+        } else {
+          this.stripeTokenHandler(result.token);
+        }
+      });
+  }
+
+  stripeTokenHandler(token: any) {
+    const items: orderItemType[] = [];
+
+    this.cart.items.map((item) => {
+      let temp = {
+        product: item.product.id,
+        quantity: item.quantity,
+        price: item.product.price! * item.quantity,
+      };
+      items.push(temp);
+    });
+
+    const data = {
+      first_name: this.firstName,
+      last_name: this.lastName,
+      email: this.email,
+      address: this.address,
+      zipcode: this.zipcode,
+      place: this.place,
+      phone: this.phone,
+      items: items,
+      stripe_token: token.id,
+    };
+
+    this.checkout(data)
+      .then(() => {
+        this.$router.push({ name: "success" });
+      })
+      .catch((error: AxiosError) => {
+        if (error.response?.status === 400) {
+          const errorResponse = error.response?.data as {
+            detail: {
+              [key: string]: string[];
+            };
+          };
+          Object.keys(errorResponse.detail).map((property) => {
+            errorResponse.detail[property].map((errorMessage) =>
+              this.errors.push(`${property}: ${errorMessage}`)
+            );
+          });
+        }
+      });
   }
 
   validateForm() {
     this.errors = [];
 
-    if (this.first_name === "") {
+    if (this.firstName === "") {
       this.errors.push("First name is missing!");
     }
 
-    if (this.last_name === "") {
+    if (this.lastName === "") {
       this.errors.push("Last name is missing!");
     }
 

@@ -1,3 +1,4 @@
+import { authType } from "@/interfaces";
 import router from "@/router";
 import store from "@/store";
 import axios, { AxiosError } from "axios";
@@ -16,12 +17,12 @@ apiInstance.interceptors.request.use(
     if (!request.url!.endsWith("refresh")) {
       store.commit("loading/setLoading", true);
     }
-    // const token = store.state.auth.token;
-    // if (token) {
-    //   if (request.url!.endsWith("api/products/latest")) {
-    //     request.headers!.Authorization = `Bearer ${token.access}`;
-    //   }
-    // }
+    const token = store.state.auth.token;
+    if (token) {
+      if (request.url!.endsWith("checkout")) {
+        request.headers!.Authorization = `Bearer ${token.access}`;
+      }
+    }
     return request;
   },
   (error: AxiosError) => {
@@ -97,10 +98,7 @@ export const searchProductsApi = async (
   return response.data;
 };
 
-export const register = async (form: {
-  username: string;
-  password: string;
-}) => {
+export const register = async (form: authType) => {
   await apiInstance.post("/api/account/signup", form);
 };
 

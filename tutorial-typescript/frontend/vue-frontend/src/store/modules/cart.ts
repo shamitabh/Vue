@@ -1,6 +1,7 @@
-import { cartItemType, cartType } from "@/interfaces";
+import apiInstance from "@/api";
+import { cartItemType, cartType, orderType } from "@/interfaces";
 import { toast } from "bulma-toast";
-import { Module } from "vuex";
+import { ActionContext, Module } from "vuex";
 import { storeType } from "..";
 
 export interface cartModuleType {
@@ -59,6 +60,21 @@ const cart: Module<cartModuleType, storeType> = {
         message: "Product removed from cart.",
         type: "is-info",
       });
+    },
+    clearCart(state: cartModuleType) {
+      state.cart = {
+        items: [],
+      };
+      localStorage.setItem("cart", JSON.stringify(state.cart));
+    },
+  },
+  actions: {
+    async checkout(
+      context: ActionContext<cartModuleType, storeType>,
+      form: orderType
+    ) {
+      await apiInstance.post(`api/order/checkout`, form);
+      context.commit("clearCart");
     },
   },
   getters: {

@@ -21,3 +21,21 @@ export interface authType {
   username: string;
   password: string;
 }
+
+export interface orderItemType {
+  product?: number;
+  quantity?: number;
+  price?: number;
+}
+
+export interface orderType {
+  first_name: string;
+  last_name: string;
+  email: string;
+  address: string;
+  zipcode: string;
+  place: string;
+  phone: string;
+  items: orderItemType[];
+  stripe_token: string;
+}

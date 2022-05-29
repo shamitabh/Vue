@@ -37,7 +37,11 @@ EXTERNAL_APPS = [
     "rest_framework_simplejwt.token_blacklist",
 ]
 
-CUSTOM_APPS = ["product.apps.ProductConfig"]
+CUSTOM_APPS = [
+    "product.apps.ProductConfig",
+    "account.apps.AccountConfig",
+    "order.apps.OrderConfig",
+]
 
 INSTALLED_APPS = INTERNAL_APPS + EXTERNAL_APPS + CUSTOM_APPS
 
@@ -145,8 +149,11 @@ REST_FRAMEWORK = {
 
 # JWT settings
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=20),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
+
+# Stripe
+STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY")
