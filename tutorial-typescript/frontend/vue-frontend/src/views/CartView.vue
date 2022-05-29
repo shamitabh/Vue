@@ -34,7 +34,7 @@
         <strong>INR {{ cartTotalPrice.toFixed(2) }}</strong
         >, {{ cartTotalLength }} item(s)
         <hr />
-        <router-link to="/" class="button is-dark"
+        <router-link to="/cart/checkout" class="button is-dark"
           >Proceed to checkout</router-link
         >
       </div>
@@ -57,19 +57,13 @@ const cart = namespace("cart");
 })
 export default class CartView extends Vue {
   @cart.Getter cartTotalLength!: number;
+  @cart.Getter cartTotalPrice!: number;
   @cart.State cart!: cartType;
   @cart.Mutation removeFromCart!: (item: cartItemType) => void;
 
   created() {
     // set page title
     document.title = "Cart | Djackets";
-  }
-
-  get cartTotalPrice() {
-    return this.cart.items.reduce(
-      (sum, item) => (sum += item.quantity * item.product.price!),
-      0
-    );
   }
 }
 </script>

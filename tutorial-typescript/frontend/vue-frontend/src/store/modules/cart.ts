@@ -65,6 +65,12 @@ const cart: Module<cartModuleType, storeType> = {
     cartTotalLength(state: cartModuleType) {
       return state.cart.items.reduce((sum, item) => (sum += item.quantity), 0);
     },
+    cartTotalPrice(state: cartModuleType) {
+      return state.cart.items.reduce(
+        (sum, item) => (sum += item.quantity * item.product.price!),
+        0
+      );
+    },
   },
 };
 

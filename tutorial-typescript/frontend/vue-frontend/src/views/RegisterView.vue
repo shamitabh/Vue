@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div class="notification is-danger" v-show="errors.length">
+          <div class="notification is-danger mt-4" v-show="errors.length">
             <p v-for="error in errors" :key="error">{{ error }}</p>
           </div>
 
@@ -92,7 +92,7 @@ export default class RegisterView extends Vue {
           this.$router.push({ name: "login" });
         })
         .catch((error: AxiosError) => {
-          if (error.response?.status === 401) {
+          if (error.response?.status === 400) {
             const errorResponse = error.response?.data as {
               detail: {
                 [key: string]: string[];

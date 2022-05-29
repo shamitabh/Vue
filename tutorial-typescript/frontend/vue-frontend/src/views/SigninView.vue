@@ -27,7 +27,7 @@
             </div>
           </div>
 
-          <div class="notification is-danger" v-show="errors.length">
+          <div class="notification is-danger mt-4" v-show="errors.length">
             <p v-for="error in errors" :key="error">{{ error }}</p>
           </div>
 

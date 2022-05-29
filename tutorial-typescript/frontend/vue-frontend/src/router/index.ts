@@ -7,9 +7,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "home",
     component: HomeView,
-    meta: {
-      requireLogin: true,
-    },
   },
   {
     path: "/:category_slug",
@@ -24,7 +21,27 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/cart",
     name: "cart",
-    component: () => import("@/views/CartView.vue"),
+    component: () => import("@/views/Cart.vue"),
+    children: [
+      {
+        path: "",
+        name: "cart",
+        component: () => import("@/views/CartView.vue"),
+      },
+      {
+        path: "success",
+        name: "success",
+        component: () => import("@/views/SuccessView.vue"),
+      },
+      {
+        path: "checkout",
+        name: "checkout",
+        component: () => import("@/views/CheckoutView.vue"),
+        meta: {
+          requireLogin: true,
+        },
+      },
+    ],
   },
   {
     path: "/login",

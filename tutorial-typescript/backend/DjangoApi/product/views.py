@@ -12,7 +12,6 @@ from django.db.models import Q
 class LatestProductList(APIView):
     def get(self, *args, **kwargs):
         try:
-            print(1 / 0)
             products = Product.objects.all()[:4]
             serializer = ProductSerializer(instance=products, many=True)
             response = serializer.data

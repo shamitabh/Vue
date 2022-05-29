@@ -16,12 +16,12 @@ apiInstance.interceptors.request.use(
     if (!request.url!.endsWith("refresh")) {
       store.commit("loading/setLoading", true);
     }
-    const token = store.state.auth.token;
-    if (token) {
-      if (request.url!.endsWith("api/products/latest")) {
-        request.headers!.Authorization = `Bearer ${token.access}`;
-      }
-    }
+    // const token = store.state.auth.token;
+    // if (token) {
+    //   if (request.url!.endsWith("api/products/latest")) {
+    //     request.headers!.Authorization = `Bearer ${token.access}`;
+    //   }
+    // }
     return request;
   },
   (error: AxiosError) => {
@@ -39,26 +39,29 @@ apiInstance.interceptors.response.use(
   async (error: AxiosError) => {
     store.commit("loading/setLoading", false);
     let originalRequest = error.config;
-    if (error.response?.status === 401) {
-      switch ((error.response?.data as { detail: string }).detail) {
-        case "Given token not valid for any token type":
-          await store.dispatch("auth/refresh");
-          return apiInstance(originalRequest);
-        case "Token is blacklisted":
-        case "Authentication credentials were not provided.":
-          store.commit("auth/unsetAuth");
-          toast({
-            message: "Session expired. Please log in again.",
-            type: "is-danger",
-          });
-          router.push({ name: "login" });
-          break;
-      }
-    } else {
-      toast({
-        message: "Something went wrong. Please try again.",
-        type: "is-danger",
-      });
+    switch (error.response?.status) {
+      case 401:
+        switch ((error.response?.data as { detail: string }).detail) {
+          case "Given token not valid for any token type":
+            await store.dispatch("auth/refresh");
+            return apiInstance(originalRequest);
+          case "Token is blacklisted":
+          case "Authentication credentials were not provided.":
+            store.commit("auth/unsetAuth");
+            toast({
+              message: "Session expired. Please log in again.",
+              type: "is-danger",
+            });
+            router.push({ name: "login" });
+            break;
+        }
+        break;
+      case 500:
+        toast({
+          message: "Something went wrong. Please try again.",
+          type: "is-danger",
+        });
+        break;
     }
     return Promise.reject(error);
   }
