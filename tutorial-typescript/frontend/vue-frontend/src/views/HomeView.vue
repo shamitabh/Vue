@@ -31,7 +31,8 @@ import ProductBox from "@/components/ProductBox.vue";
 export default class HomeView extends Vue {
   latestProducts: productType[] = [];
 
-  created() {
+  mounted() {
+    console.log("created");
     this.getLatestProducts();
 
     // set page title
@@ -41,6 +42,7 @@ export default class HomeView extends Vue {
   getLatestProducts() {
     getLatestProductsApi().then((data) => {
       this.latestProducts = data;
+      console.log("lund");
     });
   }
 }

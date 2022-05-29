@@ -7,6 +7,9 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: {
+      requireLogin: true,
+    },
   },
   {
     path: "/:category_slug",
@@ -53,6 +56,7 @@ const router = createRouter({
   routes,
 });
 
+// router guard
 router.beforeEach((to, _from, next) => {
   if (
     to.matched.some((record) => record.meta.requireLogin) &&

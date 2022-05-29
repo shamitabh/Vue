@@ -13,10 +13,12 @@ const apiInstance = axios.create({
 // axios request interceptor
 apiInstance.interceptors.request.use(
   (request) => {
-    store.commit("loading/setLoading", true);
+    if (!request.url!.endsWith("refresh")) {
+      store.commit("loading/setLoading", true);
+    }
     const token = store.state.auth.token;
     if (token) {
-      if (request.url!.endsWith("api/products/")) {
+      if (request.url!.endsWith("api/products/latest")) {
         request.headers!.Authorization = `Bearer ${token.access}`;
       }
     }
@@ -34,16 +36,14 @@ apiInstance.interceptors.response.use(
     store.commit("loading/setLoading", false);
     return response;
   },
-  (error: AxiosError) => {
+  async (error: AxiosError) => {
     store.commit("loading/setLoading", false);
     let originalRequest = error.config;
     if (error.response?.status === 401) {
       switch ((error.response?.data as { detail: string }).detail) {
         case "Given token not valid for any token type":
-          store.dispatch("auth/refresh").then(() => {
-            return apiInstance(originalRequest);
-          });
-          break;
+          await store.dispatch("auth/refresh");
+          return apiInstance(originalRequest);
         case "Token is blacklisted":
         case "Authentication credentials were not provided.":
           store.commit("auth/unsetAuth");

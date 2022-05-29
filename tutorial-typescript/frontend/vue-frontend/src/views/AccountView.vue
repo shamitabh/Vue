@@ -6,31 +6,22 @@
       </div>
 
       <div class="column is-12">
-        <button @click="onLogout" class="button is-danger">Logout</button>
+        <p class="subtitle">
+          User ID - <strong>{{ username }}</strong>
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { toast } from "bulma-toast";
 import { Vue } from "vue-class-component";
 import { namespace } from "vuex-class";
 
 const auth = namespace("auth");
 
 export default class AccountView extends Vue {
-  @auth.Action logout!: () => Promise<void>;
-
-  onLogout() {
-    this.logout().then(() => {
-      toast({
-        message: "Logged out successfully.",
-        type: "is-success",
-      });
-      this.$router.push({ name: "login" });
-    });
-  }
+  @auth.State username!: string;
 }
 </script>
 

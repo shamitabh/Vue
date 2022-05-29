@@ -67,6 +67,9 @@
             </router-link>
           </div>
         </div>
+        <router-link to="/account" class="navbar-item" v-show="username">{{
+          username
+        }}</router-link>
       </div>
     </div>
   </nav>
@@ -84,6 +87,7 @@ export default class Header extends Vue {
   showMobileMenu: boolean = false;
   @cart.Getter cartTotalLength!: number;
   @auth.State isAuthenticated!: boolean;
+  @auth.State username!: boolean;
   @auth.Action logout!: () => Promise<void>;
 
   onLogout() {
