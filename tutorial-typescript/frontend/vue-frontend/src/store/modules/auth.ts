@@ -5,14 +5,19 @@ import { storeType } from "..";
 
 export interface authModuleType {
   isAuthenticated: boolean;
-  token: string;
+  token: tokenType | null;
+}
+
+export interface tokenType {
+  refresh: string;
+  access: string;
 }
 
 const auth: Module<authModuleType, storeType> = {
   namespaced: true,
   state: (): authModuleType => ({
     isAuthenticated: false,
-    token: "",
+    token: null,
   }),
   mutations: {
     initializeAuth(state: authModuleType) {
@@ -25,24 +30,36 @@ const auth: Module<authModuleType, storeType> = {
         localStorage.setItem("token", JSON.stringify(state.token));
       }
     },
-    setAuth(state: authModuleType, token: string) {
+    setAuth(state: authModuleType, token: tokenType) {
       state.token = token;
       state.isAuthenticated = true;
       localStorage.setItem("token", JSON.stringify(state.token));
     },
     unsetAuth(state: authModuleType) {
-      state.token = "";
+      state.token = null;
       state.isAuthenticated = false;
       localStorage.setItem("token", JSON.stringify(state.token));
     },
   },
   actions: {
-    async logIn(
+    async login(
       context: ActionContext<authModuleType, storeType>,
       form: authType
     ) {
-      const response = await apiInstance.post("/api/token/", form);
-      context.commit("setAuth", response.data.auth_token);
+      const response = await apiInstance.post("/api/account/login", form);
+      context.commit("setAuth", response.data);
+    },
+    async refresh(context: ActionContext<authModuleType, storeType>) {
+      const response = await apiInstance.post("/api/account/refresh", {
+        refresh: context.state.token?.refresh,
+      });
+      context.commit("setAuth", response.data);
+    },
+    async logout(context: ActionContext<authModuleType, storeType>) {
+      await apiInstance.post("/api/account/logout", {
+        refresh: context.state.token?.refresh,
+      });
+      context.commit("unsetAuth");
     },
   },
 };

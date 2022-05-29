@@ -69,7 +69,7 @@ const auth = namespace("auth");
 })
 export default class SigninView extends Vue {
   @auth.State isAuthenticated!: boolean;
-  @auth.Action logIn!: (form: authType) => Promise<void>;
+  @auth.Action login!: (form: authType) => Promise<void>;
   username: string = "";
   password: string = "";
   errors: string[] = [];
@@ -92,7 +92,7 @@ export default class SigninView extends Vue {
         password: this.password,
       };
 
-      this.logIn(form)
+      this.login(form)
         .then(() => {
           toast({
             message: `Welcome back <b>${this.username}</b>.`,
@@ -100,16 +100,10 @@ export default class SigninView extends Vue {
           });
         })
         .catch((error: AxiosError) => {
-          const errorResponse = error.response?.data as {
-            [key: string]: string[];
-          };
-          Object.keys(errorResponse).map((property) => {
-            errorResponse[property].map((errorMessage) =>
-              property === "non_field_errors"
-                ? this.errors.push(errorMessage)
-                : this.errors.push(`${property}: ${errorMessage}`)
-            );
-          });
+          if (error.response?.status === 401) {
+            const errorResponse = error.response?.data as { detail: string };
+            this.errors.push(errorResponse.detail);
+          }
         });
     }
   }

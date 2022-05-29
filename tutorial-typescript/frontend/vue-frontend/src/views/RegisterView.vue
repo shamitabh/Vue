@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { signUp } from "@/api";
+import { register } from "@/api";
 import { AxiosError } from "axios";
 import { toast } from "bulma-toast";
 import { Vue } from "vue-class-component";
@@ -83,7 +83,7 @@ export default class RegisterView extends Vue {
         password: this.password,
       };
 
-      signUp(form)
+      register(form)
         .then(() => {
           toast({
             message: "Account created successfully. Please log in.",
@@ -92,14 +92,18 @@ export default class RegisterView extends Vue {
           this.$router.push({ name: "login" });
         })
         .catch((error: AxiosError) => {
-          const errorResponse = error.response?.data as {
-            [key: string]: string[];
-          };
-          Object.keys(errorResponse).map((property) => {
-            errorResponse[property].map((errorMessage) =>
-              this.errors.push(`${property}: ${errorMessage}`)
-            );
-          });
+          if (error.response?.status === 401) {
+            const errorResponse = error.response?.data as {
+              detail: {
+                [key: string]: string[];
+              };
+            };
+            Object.keys(errorResponse.detail).map((property) => {
+              errorResponse.detail[property].map((errorMessage) =>
+                this.errors.push(`${property}: ${errorMessage}`)
+              );
+            });
+          }
         });
     }
   }

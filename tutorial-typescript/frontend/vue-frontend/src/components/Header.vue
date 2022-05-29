@@ -49,12 +49,13 @@
         <router-link to="/winter" class="navbar-item">Winter</router-link>
         <div class="navbar-item">
           <div class="buttons">
-            <router-link
-              to="/login"
-              class="button is-light"
+            <button
+              @click="onLogout"
+              class="button is-danger"
               v-if="isAuthenticated"
-              >Logout</router-link
             >
+              Logout
+            </button>
             <router-link to="/login" class="button is-light" v-else
               >Login</router-link
             >
@@ -72,6 +73,7 @@
 </template>
 
 <script lang="ts">
+import { toast } from "bulma-toast";
 import { Vue } from "vue-class-component";
 import { namespace } from "vuex-class";
 
@@ -82,5 +84,16 @@ export default class Header extends Vue {
   showMobileMenu: boolean = false;
   @cart.Getter cartTotalLength!: number;
   @auth.State isAuthenticated!: boolean;
+  @auth.Action logout!: () => Promise<void>;
+
+  onLogout() {
+    this.logout().then(() => {
+      toast({
+        message: "Logged out successfully.",
+        type: "is-success",
+      });
+      this.$router.push({ name: "login" });
+    });
+  }
 }
 </script>

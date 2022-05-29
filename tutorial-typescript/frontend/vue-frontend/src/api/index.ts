@@ -1,3 +1,4 @@
+import router from "@/router";
 import store from "@/store";
 import axios, { AxiosError } from "axios";
 import { toast } from "bulma-toast";
@@ -6,18 +7,18 @@ import { LocationQueryValue } from "vue-router";
 // axios instance
 const apiInstance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
+  headers: { "Content-Type": "application/json" },
 });
 
 // axios request interceptor
 apiInstance.interceptors.request.use(
   (request) => {
     store.commit("loading/setLoading", true);
-
     const token = store.state.auth.token;
     if (token) {
-      request.headers = {
-        Authorization: `Token ${token}`,
-      };
+      if (request.url!.endsWith("api/products/")) {
+        request.headers!.Authorization = `Bearer ${token.access}`;
+      }
     }
     return request;
   },
@@ -35,11 +36,30 @@ apiInstance.interceptors.response.use(
   },
   (error: AxiosError) => {
     store.commit("loading/setLoading", false);
-    if (error.response?.status === 500)
+    let originalRequest = error.config;
+    if (error.response?.status === 401) {
+      switch ((error.response?.data as { detail: string }).detail) {
+        case "Given token not valid for any token type":
+          store.dispatch("auth/refresh").then(() => {
+            return apiInstance(originalRequest);
+          });
+          break;
+        case "Token is blacklisted":
+        case "Authentication credentials were not provided.":
+          store.commit("auth/unsetAuth");
+          toast({
+            message: "Session expired. Please log in again.",
+            type: "is-danger",
+          });
+          router.push({ name: "login" });
+          break;
+      }
+    } else {
       toast({
         message: "Something went wrong. Please try again.",
         type: "is-danger",
       });
+    }
     return Promise.reject(error);
   }
 );
@@ -74,8 +94,11 @@ export const searchProductsApi = async (
   return response.data;
 };
 
-export const signUp = async (form: { username: string; password: string }) => {
-  await apiInstance.post("/api/auth/users/", form);
+export const register = async (form: {
+  username: string;
+  password: string;
+}) => {
+  await apiInstance.post("/api/account/signup", form);
 };
 
 export default apiInstance;

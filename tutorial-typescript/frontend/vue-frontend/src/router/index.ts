@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
+import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -33,6 +34,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/RegisterView.vue"),
   },
   {
+    path: "/account",
+    name: "account",
+    component: () => import("@/views/AccountView.vue"),
+    meta: {
+      requireLogin: true,
+    },
+  },
+  {
     path: "/:categorySlug/:productSlug",
     name: "product",
     component: () => import("@/views/ProductView.vue"),
@@ -42,6 +51,17 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, _from, next) => {
+  if (
+    to.matched.some((record) => record.meta.requireLogin) &&
+    !store.state.auth.isAuthenticated
+  ) {
+    next({ name: "login", query: { to: to.path } });
+  } else {
+    next();
+  }
 });
 
 export default router;
