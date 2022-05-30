@@ -74,14 +74,9 @@ const router = createRouter({
 });
 
 // router guard
-router.beforeEach((to, _from, next) => {
-  if (
-    to.matched.some((record) => record.meta.requireLogin) &&
-    !store.state.auth.isAuthenticated
-  ) {
-    next({ name: "login", query: { to: to.path } });
-  } else {
-    next();
+router.beforeEach((to, _from) => {
+  if (to.meta.requireLogin && !store.state.auth.isAuthenticated) {
+    return { name: "login", query: { to: to.path } };
   }
 });
 
